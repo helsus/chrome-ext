@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "version": "1.0",
+  "icons": {
+    "16": "icons/icon_16.png",
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  },
+  "permissions": [
+    "https://*/*"
+  ],
+  "name": "fixture",
+  "description": "fixture",
+  "browser_action": {
+    "default_title": "fixture",
+    "default_icon": "icons/icon_48.png",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "background": {
+    "persistent": false,
+    "scripts": [
+      "js/background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://google.com/*"
+      ],
+      "js": [
+        "js/content.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "js/inject.js"
+  ]
+}
