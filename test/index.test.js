@@ -1,8 +1,6 @@
 const { assert } = require('chai');
 const fs = require('fs');
 const NodeRSA = require('node-rsa');
-const yazl = require('yazl');
-const stream = require('stream');
 const { promisify } = require('util');
 const lib = require('../src');
 
@@ -18,25 +16,16 @@ suite('src/index.js', function () {
       );
     });
   });
+
   suite('#archive()', function () {
     setup(async function () {
       const root = './test/fixtures';
       const files = await lib.filelist(root);
-      const output = await lib.archive(root, files);
-      // const zip = new yazl.ZipFile();
-      this.entries = [];// zip.getEntries();
+      this.output = await lib.archive(root, files);
     });
-    test('add files to archive', async function () {
-      assert.deepEqual(
-        this.entries.map(i => i.name),
-        ['index.js', 'manifest.json']
-      );
-    });
-    test('add directories to archive', async function () {
-      assert.deepEqual(
-        this.entries.map(i => i.entryName),
-        ['background/index.js', 'manifest.json']
-      );
+    test('snapshot', async function () {
+      const snapshot = await readFile('./test/snapshots/archive');
+      assert.equal(this.output.toString('base64'), snapshot);
     });
   });
 

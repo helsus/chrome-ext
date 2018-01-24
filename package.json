@@ -19,9 +19,9 @@
     "nyc": "^11.3.0"
   },
   "dependencies": {
+    "archiver": "^2.1.1",
     "ignore": "^3.3.7",
     "node-rsa": "^0.4.2",
-    "recursive-readdir": "^2.2.1",
-    "yazl": "^2.4.3"
+    "recursive-readdir": "^2.2.1"
   }
 }

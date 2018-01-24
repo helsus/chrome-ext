@@ -1,7 +1,7 @@
 const fs = require('fs');
 const recursive = require('recursive-readdir');
 const ignore = require('ignore');
-const yazl = require('yazl');
+const archiver = require('archiver');
 const { resolve, normalize } = require('path');
 const { promisify } = require('util');
 const NodeRSA = require('node-rsa');
@@ -33,12 +33,17 @@ const filelist = async (path) => {
  * @return {Promise<Buffer>}
  */
 const archive = (rootPath, files) => new Promise((resolve, reject) => {
-  const zip = new yazl.ZipFile();
+  const archive = archiver('zip');
   files.forEach(file =>
-    zip.addFile(file, file.slice(normalize(rootPath).length + 1)));
+    archive.file(file, { name: file.slice(normalize(rootPath).length + 1) }));
 
-  zip.end();
-  // zip.outputStream.pipe()
+  const chunks = [];
+  archive.on('data', (chunk) => chunks.push(chunk));
+  // Whole archive in memory :)
+  archive.on('end', () => resolve(Buffer.concat(chunks)));
+  archive.on('error', reject);
+  archive.on('warning', reject);
+  archive.finalize();
 });
 
 /**
